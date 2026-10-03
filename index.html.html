@@ -1,0 +1,186 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Maths is a Fun Adventure 🌟 🌟</title>
+<style>
+  *{box-sizing:border-box}
+  body{
+    margin:0;font-family:"Trebuchet MS",Arial,sans-serif;
+    min-height:100vh;background:linear-gradient(135deg,#fff4b8,#c9f7ff,#ffd6ef);
+    color:#24304a;overflow-x:hidden
+  }
+  .wrap{max-width:1050px;margin:auto;padding:24px 16px 40px}
+  header{text-align:center}
+  h1{font-size:clamp(2rem,5vw,4rem);margin:8px 0;color:#ff5b6e;text-shadow:2px 3px #fff}
+  .subtitle{font-size:clamp(1rem,2.5vw,1.35rem);font-weight:700;margin:0 0 18px}
+  .stats{display:flex;justify-content:center;gap:12px;flex-wrap:wrap;margin-bottom:16px}
+  .pill{background:white;border:3px solid #fff;border-radius:30px;padding:9px 18px;font-weight:800;box-shadow:0 5px 12px #0001}
+  .game{background:#ffffffd9;border-radius:30px;padding:22px;box-shadow:0 12px 30px #53608030;border:4px solid white}
+  .progress{height:18px;background:#e8eaf5;border-radius:20px;overflow:hidden;margin:4px 0 20px}
+  .bar{height:100%;width:2%;background:linear-gradient(90deg,#ff8a5c,#ffcf4a,#65d6a0);transition:.4s}
+  .question{text-align:center}
+  .number{font-size:1rem;font-weight:800;color:#777;margin-bottom:4px}
+  .visual{min-height:190px;display:flex;align-items:center;justify-content:center;gap:14px;flex-wrap:wrap;padding:12px}
+  .group{display:flex;flex-wrap:wrap;justify-content:center;gap:6px;max-width:390px}
+  .item{font-size:45px;animation:bounce 1.8s infinite}
+  .plus{font-size:48px;font-weight:900;color:#ff6478}
+  @keyframes bounce{50%{transform:translateY(-7px) rotate(3deg)}}
+  .sum{font-size:clamp(2rem,7vw,4rem);font-weight:900;margin:5px 0 16px}
+  .answer{display:flex;justify-content:center;gap:10px;flex-wrap:wrap}
+  input{font-size:1.6rem;width:120px;text-align:center;border:4px solid #8ddbd0;border-radius:18px;padding:10px;outline:none}
+  input:focus{border-color:#ffae57}
+  button{border:0;border-radius:18px;padding:12px 20px;font-size:1.1rem;font-weight:900;cursor:pointer;transition:.15s}
+  button:hover{transform:translateY(-2px)}
+  .check{background:#65d6a0;color:#123}
+  .next{background:#ffca55;color:#4d3510;display:none}
+  .feedback{min-height:45px;font-size:1.25rem;font-weight:900;margin-top:13px}
+  .choices{display:flex;justify-content:center;gap:10px;flex-wrap:wrap;margin-top:10px}
+  .choice{background:#e9ddff;color:#44276d;min-width:70px}
+  .footer{text-align:center;font-weight:800;margin-top:18px;color:#5e6680}
+  .celebrate{font-size:2.3rem}
+  .hidden{display:none!important}
+  .start{background:#ff6f91;color:white;font-size:1.3rem;padding:15px 30px}
+  .restart{background:#8c7cff;color:white}
+</style>
+</head>
+<body>
+<div class="wrap">
+  <header>
+    <div class="celebrate">🍓 🐰 🍉 🦊 🍎 🐼 🫐 🐥</div>
+    <h1>Maths is a Fun Adventure 🌟 🌟</h1>
+    <p class="subtitle">Count it, solve the sums, and become a Master in Mathematics!</p>
+    <div class="stats">
+      <div class="pill">⭐ Score: <span id="score">0</span></div>
+      <div class="pill">📝 Question: <span id="qnum">1</span>/50</div>
+      <div class="pill">🔥 Streak: <span id="streak">0</span></div>
+    </div>
+  </header>
+
+  <main class="game">
+    <div class="progress"><div class="bar" id="bar"></div></div>
+    <section id="gameArea">
+      <div class="question">
+        <div class="number">Let's solve this one!</div>
+        <div class="visual" id="visual"></div>
+        <div class="sum" id="sum"></div>
+        <div class="answer">
+          <input id="answer" type="number" min="0" max="30" aria-label="Your answer" autocomplete="off">
+          <button class="check" id="check">Check! ✨</button>
+        </div>
+        <div class="choices" id="choices"></div>
+        <div class="feedback" id="feedback"></div>
+        <button class="next" id="next">Next Adventure ➜</button>
+      </div>
+    </section>
+    <section id="finish" class="question hidden">
+      <div class="celebrate">🎉 🏆 🌈 🎉</div>
+      <h2>Adventure Complete!</h2>
+      <p style="font-size:1.3rem">You finished all 50 maths challenges!</p>
+      <div class="sum">⭐ <span id="finalScore">0</span>/50 ⭐</div>
+      <p id="finalMessage" style="font-size:1.3rem;font-weight:900"></p>
+      <button class="restart" onclick="restartGame()">Play Again 🔄</button>
+    </section>
+  </main>
+  <div class="footer">🌟 Every question you try makes your maths brain stronger! 🌟</div>
+</div>
+
+<script>
+const questions = [
+ [1,2,'🍓'],[3,2,'🍎'],[4,1,'🍌'],[2,5,'🫐'],[3,4,'🍊'],
+ [5,2,'🍉'],[1,6,'🥭'],[4,3,'🐰'],[2,7,'🐥'],[5,3,'🦊'],
+ [6,2,'🍓'],[4,4,'🍎'],[7,1,'🍌'],[3,6,'🫐'],[5,4,'🍊'],
+ [2,8,'🍉'],[6,3,'🥭'],[4,5,'🐰'],[7,2,'🐼'],[3,7,'🐥'],
+ [8,1,'🍓'],[5,5,'🍎'],[6,4,'🍌'],[2,9,'🫐'],[7,3,'🍊'],
+ [4,6,'🍉'],[8,2,'🥭'],[5,6,'🐰'],[9,1,'🦊'],[3,8,'🐥'],
+ [6,5,'🍓'],[7,4,'🍎'],[8,3,'🍌'],[4,7,'🫐'],[5,7,'🍊'],
+ [9,2,'🍉'],[6,6,'🥭'],[8,4,'🐰'],[7,5,'🐼'],[9,3,'🐥'],
+ [5,8,'🍓'],[10,1,'🍎'],[6,7,'🍌'],[8,5,'🫐'],[9,4,'🍊'],
+ [7,7,'🍉'],[10,2,'🥭'],[8,6,'🐰'],[9,5,'🦊'],[10,3,'🐥']
+];
+
+let index=0, score=0, streak=0, answered=false;
+
+const $ = id => document.getElementById(id);
+function renderItems(emoji,n){
+  return Array.from({length:n},()=>`<span class="item">${emoji}</span>`).join('');
+}
+function loadQuestion(){
+  answered=false;
+  const [a,b,emoji]=questions[index];
+  $('qnum').textContent=index+1;
+  $('bar').style.width=((index+1)/50*100)+'%';
+  $('visual').innerHTML=`<div class="group">${renderItems(emoji,a)}</div><div class="plus">+</div><div class="group">${renderItems(emoji,b)}</div>`;
+  $('sum').textContent=`${a} + ${b} = ?`;
+  $('answer').value='';
+  $('answer').disabled=false;
+  $('check').disabled=false;
+  $('next').style.display='none';
+  $('feedback').textContent='';
+  $('feedback').style.color='';
+  $('answer').focus();
+  makeChoices(a+b);
+}
+function makeChoices(correct){
+  const set=new Set([correct]);
+  while(set.size<4){
+    const delta=Math.floor(Math.random()*5)-2;
+    const n=Math.max(1,correct+delta);
+    set.add(n);
+  }
+  $('choices').innerHTML=[...set].sort(()=>Math.random()-.5)
+    .map(n=>`<button class="choice" onclick="choose(${n})">${n}</button>`).join('');
+}
+function choose(n){
+  $('answer').value=n;
+  checkAnswer();
+}
+function checkAnswer(){
+  if(answered)return;
+  const [a,b]=questions[index], correct=a+b;
+  const val=Number($('answer').value);
+  if($('answer').value==='')return;
+  answered=true;
+  $('answer').disabled=true;
+  $('check').disabled=true;
+  if(val===correct){
+    score++; streak++;
+    $('feedback').textContent=['🎉 Fantastic!','🌟 Super maths!','🐰 Hoppy hooray!','🍓 Berry brilliant!','🏆 You got it!'][Math.floor(Math.random()*5)];
+    $('feedback').style.color='#22a06b';
+  }else{
+    streak=0;
+    $('feedback').textContent=`Almost! The answer is ${correct}. You can do it! 💪`;
+    $('feedback').style.color='#e45b67';
+  }
+  $('score').textContent=score;
+  $('streak').textContent=streak;
+  $('next').style.display='inline-block';
+  $('choices').querySelectorAll('button').forEach(b=>b.disabled=true);
+}
+function nextQuestion(){
+  if(!answered)return;
+  index++;
+  if(index>=questions.length){finishGame();return;}
+  loadQuestion();
+}
+function finishGame(){
+  $('gameArea').classList.add('hidden');
+  $('finish').classList.remove('hidden');
+  $('finalScore').textContent=score;
+  const msg=score===50?'You are a TRUE Maths Master! 👑':score>=40?'Amazing work! Your maths superpowers are shining! 🌟':score>=25?'Great job! Keep practising and you will be unstoppable! 🚀':'Good effort! Every adventure helps your brain grow! 🌱';
+  $('finalMessage').textContent=msg;
+}
+function restartGame(){
+  index=0;score=0;streak=0;
+  $('score').textContent=0;$('streak').textContent=0;
+  $('finish').classList.add('hidden');$('gameArea').classList.remove('hidden');
+  loadQuestion();
+}
+$('check').addEventListener('click',checkAnswer);
+$('next').addEventListener('click',nextQuestion);
+$('answer').addEventListener('keydown',e=>{if(e.key==='Enter')checkAnswer();});
+loadQuestion();
+</script>
+</body>
+</html>
